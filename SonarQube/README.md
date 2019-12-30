@@ -4,7 +4,7 @@ This module is created to run script against the SonarQube server. It is created
 
 ## Usage
 
-Example script provided below: 
+Example script provided below - it's example from my TFS automated build
 
 ```powershell
 using module .\Utils\SonarUtils.psm1
