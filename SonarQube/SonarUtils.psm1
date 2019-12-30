@@ -1,43 +1,35 @@
 class SonarQubeUtils {
-
-    [string] $_SonarAddress;
-    [string] $_Token;
-    hidden [string] $_ApiProjectStatusAddress = "/api/qualitygates/project_status";
-    hidden [string] $_ApiProjectsListAddress = "/api/components/search?qualifiers=TRK";
-    hidden [string] $_ApiSonarStatusAddress = "/api/system/health";
-    hidden [string] $_ContentType = "application/json";
+    [string] $SonarAddress;
+    [string] $Token;
+    hidden [string] $ApiProjectStatusAddress = "/api/qualitygates/project_status";
+    hidden [string] $ApiProjectsListAddress = "/api/components/search?qualifiers=TRK";
+    hidden [string] $ApiSonarStatusAddress = "/api/system/health";
+    hidden [string] $ContentType = "application/json";
     
     SonarQubeUtils([string]$sonarAddress, $token) {
-        $this._SonarAddress = $sonarAddress.Trim('/').Trim('\');
-        $this._Token = $token;
+        $this.SonarAddress = $sonarAddress.Trim('/').Trim('\');
+        $this.Token = $token;
     }
 
     [System.Net.WebClient] CreateWebClient() {
         $client = New-Object System.Net.WebClient;
-        $client.Headers["Content-Type"] = $this._ContentType;
+        $client.Headers["Content-Type"] = $this.ContentType;
         
-        $token = [System.Text.Encoding]::UTF8.GetBytes("$($this._Token)`:");
-        $base64 = [System.Convert]::ToBase64String($token);
+        $byteToken = [System.Text.Encoding]::UTF8.GetBytes("$($this.Token)`:");
+        $base64 = [System.Convert]::ToBase64String($byteToken);
         $client.Headers.Add("Authorization", "Basic $base64");
 
         return $client;
     }
 
-    [bool] GetSonarProjectQualityGateStatus($projectKey) {
+    [string] GetSonarProjectQualityGateStatus($projectKey) {
         Write-Host "Getting project status of $projectKey";
         $client = $this.CreateWebClient();
-        Write-Host $client.Headers;
         if ($client) {
-            $uri = "$($this._SonarAddress)$($this._ApiProjectStatusAddress)`?projectKey=$projectKey";
+            $uri = "$($this.SonarAddress)$($this.ApiProjectStatusAddress)`?projectKey=$projectKey";
             Write-Host "Uri is $uri";
             $json = $client.DownloadString($uri) | ConvertFrom-Json;
-            if ($json.projectstatus.status -eq "OK") {
-                return $true;
-            }
-            else {
-                Write-Host "Status is $($json.projectstatus.status)";
-                return $false;
-            }
+            return $json.projectstatus.status;
         }
         else {
             Write-Host "Could not create client.";
