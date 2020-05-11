@@ -1,3 +1,5 @@
+#Requires -RunAsAdministrator;
+
 $currVer = 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion';
 $edId = (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').EditionID;
 
