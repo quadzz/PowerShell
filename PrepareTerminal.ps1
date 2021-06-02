@@ -1,10 +1,10 @@
-$currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent());
+$currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
 if (!($currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))) {
-    Write-Error "Will not run scripts, powershell needs to be in admin mode!";
+    Write-Output "[X] [X] [X] [X] [X] [X] Will not run scripts, powershell needs to be in admin mode! [X] [X] [X] [X] [X] [X] [X] [X] ";
 }
 else {
     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned;
-    #Creating profile if needed
+
     if (!(Test-Path $profile)) {
         New-Item -ItemType File -Path $profile -Force;
     }
@@ -16,6 +16,7 @@ else {
     else {
         Write-Output "oh-my-posh is already installed!";
     }
+    
     if (!(Get-Module -Name "terminal-icons")) {
         Install-Module -Name Terminal-Icons -Repository PSGallery;
     }
@@ -155,7 +156,7 @@ else {
         ],
         "final_space": true
       }' + "'";
-    $content = @("$themeContent | Set-Content `"$json`"","Set-PoshPrompt -Theme `$json","Import-Module oh-my-posh", "Import-Module -Name Terminal-Icons");
+    $content = @("$themeContent | Set-Content `"$json`"","Set-PoshPrompt -Theme `"$json`"","Import-Module oh-my-posh", "Import-Module -Name Terminal-Icons");
     $content | Set-Content $profile;
     
     . $profile;
