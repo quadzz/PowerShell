@@ -156,7 +156,7 @@ else {
         ],
         "final_space": true
       }' + "'";
-    $content = @("$themeContent | Set-Content `"$json`"","Set-PoshPrompt -Theme `"$json`"","Import-Module oh-my-posh", "Import-Module -Name Terminal-Icons");
+    $content = @("$themeContent | Set-Content `"$json`"", "Import-Module oh-my-posh", "Set-PoshPrompt -Theme `"$json`"", "Import-Module -Name Terminal-Icons");
     $content | Set-Content $profile;
     
     . $profile;
